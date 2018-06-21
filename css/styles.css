@@ -44,7 +44,7 @@ body {
   width: 100%;
 }
 
-.catCounting {
+.catCounting, .catName {
   position: absolute;
   margin-top: 0;
   text-align: center;
@@ -55,4 +55,7 @@ body {
   line-height: 2em;
   background-color: black;
   color: white;
+}
+.catCounting {
+  top: 60px;
 }
