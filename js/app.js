@@ -2,6 +2,7 @@
 
 let model = {
   defaultCat: null,
+  adminShow: false,
   cats: [
     {
       name: "Nounou",
@@ -42,6 +43,8 @@ let octopus = {
     // Initiate the views
     viewCat.init();
     viewList.init();
+    viewAdmin.init();
+    viewAdmin.hide();
   },
 
   getDefaultCat: function() {
@@ -59,7 +62,30 @@ let octopus = {
   updateCounter: function() {
     model.defaultCat.count++;
     viewCat.render();
+  },
+
+  adminDisplay: function() {
+    if(model.adminShow === false) {
+      model.adminShow = true;
+      viewAdmin.show();
+    } else if (model.adminShow === true) {
+      model.adminShow = false;
+      viewAdmin.hide();
+    }
+  },
+
+  adminCancel: function() {
+    viewAdmin.hide();
+  },
+
+  adminSave: function() {
+    console.log(viewAdmin.adminName.value);
+    model.defaultCat.name = viewAdmin.adminName.value;
+    viewCat.render();
+    viewList.render();
+    viewAdmin.render();
   }
+
 };
 
 
@@ -97,6 +123,7 @@ let viewList = {
   init: function() {
     // DOM Elements
     this.catList = document.querySelector('.catList ul');
+    this.adminPanel = document.querySelector('.adminPanel');
 
     this.render();
   },
@@ -104,9 +131,11 @@ let viewList = {
   render: function() {
     let cat;
     let element;
-    
+
     // Get the cats to render
     let cats = octopus.getCats();
+
+    this.catList.innerHTML = '';
 
     // Iterate over the cats
     for(let i = 0; i < cats.length; i++) {
@@ -125,6 +154,45 @@ let viewList = {
 
       this.catList.appendChild(element);
     }
+  }
+};
+
+let viewAdmin = {
+  init: function() {
+    this.adminName = document.querySelector('.adminName');
+    this.adminPanel = document.querySelector('.adminPanel');
+
+    this.adminBtn = document.querySelector('.adminBtn');
+    this.saveBtn = document.querySelector('.saveBtn');
+    this.cancelBtn = document.querySelector('.cancelBtn');
+
+    this.adminBtn.addEventListener('click', function() {
+      octopus.adminDisplay();
+      console.log('hello');
+    });
+
+    this.cancelBtn.addEventListener('click', function() {
+      octopus.adminCancel();
+    });
+
+    this.saveBtn.addEventListener('click', function() {
+      octopus.adminSave();
+    });
+
+    this.render();
+  },
+
+  render: function() {
+    let defaultCat = octopus.getDefaultCat();
+    this.adminName.value = defaultCat.name;
+  },
+
+  show: function() {
+    this.adminPanel.style.display = 'block';
+  },
+
+  hide: function() {
+    this.adminPanel.style.display = 'none';
   }
 };
 
